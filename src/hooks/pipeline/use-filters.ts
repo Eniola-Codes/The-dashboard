@@ -3,11 +3,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { getFilterOptions, getRawDeals } from "@/lib/utils/pipeline"
 import {
-  buildFilterSearchParams,
   buildFilterUrl,
   parseFiltersFromSearchParams,
 } from "@/lib/utils/pipeline/filter"
-import { SearchParamsLike } from "@/types/filter"
 import { FilterOptions } from "@/types/filter"
 
 const allDeals = getRawDeals()
@@ -23,64 +21,39 @@ function countActiveFilters(filters: FilterOptions): number {
   return count
 }
 
-function readFiltersFromUrl(searchParams: SearchParamsLike): FilterOptions {
-  return parseFiltersFromSearchParams(searchParams, filterOptions)
-}
-
-function areFiltersEqual(a: FilterOptions, b: FilterOptions): boolean {
-  return buildFilterSearchParams(a).toString() === buildFilterSearchParams(b).toString()
-}
-
-function syncFilterUrl(pathname: string, filters: FilterOptions) {
-  const url = buildFilterUrl(pathname, filters)
-
-  if (typeof window !== "undefined") {
-    window.history.replaceState(window.history.state, "", url)
-  }
-
-  return url
+function parseFiltersFromQuery(query: string): FilterOptions {
+  return parseFiltersFromSearchParams(new URLSearchParams(query), filterOptions)
 }
 
 export function useFilters() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const searchParamsKey = searchParams.toString()
 
-  const [filters, setFilters] = React.useState<FilterOptions>(() =>
-    readFiltersFromUrl(searchParams)
+  const filters = React.useMemo(
+    () => parseFiltersFromQuery(searchParamsKey),
+    [searchParamsKey]
   )
-
-  React.useEffect(() => {
-    function syncFiltersFromUrl() {
-      const fromUrl = readFiltersFromUrl(
-        new URLSearchParams(window.location.search)
-      )
-      setFilters((current) => (areFiltersEqual(current, fromUrl) ? current : fromUrl))
-    }
-
-    window.addEventListener("popstate", syncFiltersFromUrl)
-    return () => window.removeEventListener("popstate", syncFiltersFromUrl)
-  }, [])
 
   const updateFilter = React.useCallback(
     <K extends keyof FilterOptions>(
       key: K,
       value: FilterOptions[K] | "all"
     ) => {
+      const currentFilters = parseFiltersFromQuery(searchParamsKey)
       const nextFilters: FilterOptions = {
-        ...filters,
+        ...currentFilters,
         [key]: value === "all" ? undefined : value,
       }
 
-      setFilters(nextFilters)
-      router.replace(syncFilterUrl(pathname, nextFilters), { scroll: false })
+      router.replace(buildFilterUrl(pathname, nextFilters), { scroll: false })
     },
-    [filters, pathname, router]
+    [pathname, router, searchParamsKey]
   )
 
   const clearFilters = React.useCallback(() => {
-    setFilters({})
-    router.replace(syncFilterUrl(pathname, {}), { scroll: false })
+    router.replace(buildFilterUrl(pathname, {}), { scroll: false })
   }, [pathname, router])
 
   const activeFilterCount = React.useMemo(
@@ -88,15 +61,12 @@ export function useFilters() {
     [filters]
   )
 
-  const hasActiveFilters = activeFilterCount > 0
-  const filtersKey = buildFilterSearchParams(filters).toString()
-
   return {
     filters,
-    filtersKey,
+    filtersKey: searchParamsKey,
     filterOptions,
     activeFilterCount,
-    hasActiveFilters,
+    hasActiveFilters: activeFilterCount > 0,
     updateFilter,
     clearFilters,
     totalCount: allDeals.length,

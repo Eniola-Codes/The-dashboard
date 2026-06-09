@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { SlidersHorizontalIcon } from "lucide-react"
-
 import { FilterFields } from "@/components/pipeline/filter/filter-fields"
 import { FilterReset } from "@/components/pipeline/filter/filter-reset"
 import { Badge } from "@/components/ui/badge"
