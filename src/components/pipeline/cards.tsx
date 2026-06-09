@@ -7,17 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useChartData } from "@/hooks/pipeline/use-chart"
 import { formatCurrency, formatPercent } from "@/lib/utils/pipeline"
 import { PipelineMetrics } from "@/types/pipeline"
 
 export function SectionCards({ metrics }: { metrics: PipelineMetrics }) {
-  const hasWonDeals = metrics.wonDeals > 0
-  const hasDeals = metrics.totalDeals > 0
-  const isSingleDeal = metrics.totalDeals === 1
-  const largestToAverageRatio =
-    hasDeals && metrics.averageDealValue > 0
-      ? metrics.maxDealValue / metrics.averageDealValue
-      : 0
+  const { hasWonDeals, hasDeals, isSingleDeal, largestToAverageRatio } =
+    useChartData(metrics)
 
   return (
     <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
@@ -29,13 +25,16 @@ export function SectionCards({ metrics }: { metrics: PipelineMetrics }) {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              {metrics.totalDeals} {metrics.totalDeals === 1 ? "deal" : "deals"}
+              {metrics.totalDeals}{" "}
+              {metrics.totalDeals === 1 ? "deal" : "deals"}
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="text-muted-foreground">
-            Top vertical: {metrics.topPerformingVertical}
+            {hasDeals
+              ? `Top vertical: ${metrics.topPerformingVertical}`
+              : "No pipeline value in this view"}
           </div>
         </CardFooter>
       </Card>
@@ -54,7 +53,7 @@ export function SectionCards({ metrics }: { metrics: PipelineMetrics }) {
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="text-muted-foreground">
-            {metrics.topOwnerByDeals
+            {hasDeals && metrics.topOwnerByDeals
               ? `Top owner: ${metrics.topOwnerByDeals.owner}`
               : "No deals in this view"}
           </div>
@@ -71,7 +70,7 @@ export function SectionCards({ metrics }: { metrics: PipelineMetrics }) {
             <Badge variant="outline">
               {hasWonDeals
                 ? `${formatPercent(metrics.wonShareOfPipeline)} won value`
-                : "No won deals"}
+                : "-"}
             </Badge>
           </CardAction>
         </CardHeader>
@@ -79,7 +78,7 @@ export function SectionCards({ metrics }: { metrics: PipelineMetrics }) {
           <div className="text-muted-foreground">
             {hasWonDeals
               ? `Largest won deal: ${formatCurrency(metrics.largestWonDealValue)}`
-              : "No won deals yet"}
+              : "No won deals in this view"}
           </div>
         </CardFooter>
       </Card>
@@ -91,13 +90,13 @@ export function SectionCards({ metrics }: { metrics: PipelineMetrics }) {
             {hasDeals ? formatCurrency(metrics.averageDealValue) : "N/A"}
           </CardTitle>
           <CardAction>
-            {hasDeals && (
-              <Badge variant="outline">
-                {isSingleDeal
+            <Badge variant="outline">
+              {hasDeals
+                ? isSingleDeal
                   ? "Single deal"
-                  : `${formatCurrency(metrics.minDealValue)} – ${formatCurrency(metrics.maxDealValue)}`}
-              </Badge>
-            )}
+                  : `${formatCurrency(metrics.minDealValue)} – ${formatCurrency(metrics.maxDealValue)}`
+                : "-"}
+            </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
