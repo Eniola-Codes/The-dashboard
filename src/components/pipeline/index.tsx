@@ -14,6 +14,8 @@ export function PipelineDashboard() {
   const {
     filters,
     filterOptions,
+    activeFilterCount,
+    hasActiveFilters,
     filteredDeals,
     metrics,
     totalCount,
@@ -27,6 +29,8 @@ export function PipelineDashboard() {
       <PipelineFilters
         filters={filters}
         filterOptions={filterOptions}
+        activeFilterCount={activeFilterCount}
+        hasActiveFilters={hasActiveFilters}
         filteredCount={filteredCount}
         totalCount={totalCount}
         onFilterChange={updateFilter}

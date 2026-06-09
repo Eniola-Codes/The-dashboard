@@ -35,6 +35,8 @@ type FilterOptions = {
 type PipelineFiltersProps = {
   filters: FilterOptions
   filterOptions: PipelineFilterOptions
+  activeFilterCount: number
+  hasActiveFilters: boolean
   filteredCount: number
   totalCount: number
   onFilterChange: <K extends keyof FilterOptions>(

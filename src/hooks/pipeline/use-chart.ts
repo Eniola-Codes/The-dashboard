@@ -1,31 +1,29 @@
 import * as React from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+
 import {
   computeMetrics,
   filterDeals,
-  getFilterOptions,
   getRawDeals,
   PIPELINE_OWNER_ORDER,
   PIPELINE_SOURCE_ORDER,
   PIPELINE_STAGE_ORDER,
   PIPELINE_VERTICAL_ORDER,
 } from "@/lib/utils/pipeline"
-import { buildFilterUrl, parseFiltersFromSearchParams } from "@/lib/utils/pipeline/filter"
-import { FilterOptions } from "@/types/filter"
+import { useFilters } from "@/hooks/pipeline/use-filters"
 import { PipelineMetrics } from "@/types/pipeline"
 
 const allDeals = getRawDeals()
-const filterOptions = getFilterOptions(allDeals)
 
 export function useChart() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-
-  const filters = React.useMemo(
-    () => parseFiltersFromSearchParams(searchParams, filterOptions),
-    [searchParams]
-  )
+  const {
+    filters,
+    filterOptions,
+    activeFilterCount,
+    hasActiveFilters,
+    updateFilter,
+    clearFilters,
+    totalCount,
+  } = useFilters()
 
   const filteredDeals = React.useMemo(
     () => filterDeals(allDeals, filters),
@@ -37,28 +35,14 @@ export function useChart() {
     [filteredDeals]
   )
 
-  function updateFilter<K extends keyof FilterOptions>(
-    key: K,
-    value: FilterOptions[K] | "all"
-  ) {
-    const nextFilters: FilterOptions = {
-      ...filters,
-      [key]: value === "all" ? undefined : value,
-    }
-
-    router.replace(buildFilterUrl(pathname, nextFilters), { scroll: false })
-  }
-
-  function clearFilters() {
-    router.replace(pathname, { scroll: false })
-  }
-
   return {
     filters,
     filterOptions,
+    activeFilterCount,
+    hasActiveFilters,
     filteredDeals,
     metrics,
-    totalCount: allDeals.length,
+    totalCount,
     filteredCount: filteredDeals.length,
     updateFilter,
     clearFilters,
