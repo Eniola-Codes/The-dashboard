@@ -1,3 +1,8 @@
+"use client"
+
+import * as React from "react"
+import { SlidersHorizontalIcon } from "lucide-react"
+
 import { FilterFields } from "@/components/pipeline/filter/filter-fields"
 import { FilterReset } from "@/components/pipeline/filter/filter-reset"
 import { Badge } from "@/components/ui/badge"
@@ -10,10 +15,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { PipelineFiltersProps } from "@/types/filter"
-import { SlidersHorizontalIcon } from "lucide-react"
 
 export function PipelineFilters({
   filters,
+  filtersKey,
   filterOptions,
   activeFilterCount,
   hasActiveFilters,
@@ -22,10 +27,17 @@ export function PipelineFilters({
   onFilterChange,
   onClearFilters,
 }: PipelineFiltersProps) {
+  const [drawerOpen, setDrawerOpen] = React.useState(false)
+
+  function handleClearFilters() {
+    onClearFilters()
+    setDrawerOpen(false)
+  }
+
   return (
     <div className="sticky top-0 z-20 border-b bg-background px-4 py-3 lg:px-6">
       <div className="flex items-center justify-between gap-3 lg:hidden">
-        <Drawer>
+        <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
           <DrawerTrigger asChild>
             <Button variant="outline" size="sm" className="shrink-0">
               <SlidersHorizontalIcon className="size-4" />
@@ -37,22 +49,25 @@ export function PipelineFilters({
               ) : null}
             </Button>
           </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader className="text-left">
-              <DrawerTitle>Filters</DrawerTitle>
-            </DrawerHeader>
-            <div className="flex flex-col gap-4 px-4 pb-6">
-              <FilterFields
-                filters={filters}
-                filterOptions={filterOptions}
-                onFilterChange={onFilterChange}
-              />
-              <FilterReset
-                hasActiveFilters={hasActiveFilters}
-                onClearFilters={onClearFilters}
-              />
-            </div>
-          </DrawerContent>
+          {drawerOpen ? (
+            <DrawerContent>
+              <DrawerHeader className="text-left">
+                <DrawerTitle>Filters</DrawerTitle>
+              </DrawerHeader>
+              <div className="flex flex-col gap-4 px-4 pb-6">
+                <FilterFields
+                  key={filtersKey}
+                  filters={filters}
+                  filterOptions={filterOptions}
+                  onFilterChange={onFilterChange}
+                />
+                <FilterReset
+                  hasActiveFilters={hasActiveFilters}
+                  onClearFilters={handleClearFilters}
+                />
+              </div>
+            </DrawerContent>
+          ) : null}
         </Drawer>
         <p className="text-sm text-muted-foreground">
           Showing {filteredCount} of {totalCount} deals
@@ -61,6 +76,7 @@ export function PipelineFilters({
 
       <div className="hidden flex-col gap-3 lg:flex xl:flex-row xl:items-center xl:gap-5">
         <FilterFields
+          key={filtersKey}
           filters={filters}
           filterOptions={filterOptions}
           onFilterChange={onFilterChange}

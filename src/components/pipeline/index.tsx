@@ -13,6 +13,7 @@ import { useChart } from "@/hooks/pipeline/use-chart"
 export function PipelineDashboard() {
   const {
     filters,
+    filtersKey,
     filterOptions,
     activeFilterCount,
     hasActiveFilters,
@@ -28,6 +29,7 @@ export function PipelineDashboard() {
     <div className="flex flex-col gap-4 md:gap-6">
       <PipelineFilters
         filters={filters}
+        filtersKey={filtersKey}
         filterOptions={filterOptions}
         activeFilterCount={activeFilterCount}
         hasActiveFilters={hasActiveFilters}

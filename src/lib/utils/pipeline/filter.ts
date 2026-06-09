@@ -1,5 +1,5 @@
 import { Deal } from "@/types/pipeline"
-import { DateRange, FilterOptions, PipelineFilterOptions } from "@/types/filter"
+import { DateRange, FilterOptions, PipelineFilterOptions, SearchParamsLike } from "@/types/filter"
 
 import { PIPELINE_SOURCE_ORDER } from "./chart"
 
@@ -14,10 +14,6 @@ const DATE_RANGE_OPTIONS: { value: DateRange; label: string }[] = [
 const VALID_DATE_RANGES = new Set<DateRange>(
   DATE_RANGE_OPTIONS.map((option) => option.value)
 )
-
-type SearchParamsLike = {
-  get(name: string): string | null
-}
 
 function startOfDay(date: Date): Date {
   const normalizedDate = new Date(date)
