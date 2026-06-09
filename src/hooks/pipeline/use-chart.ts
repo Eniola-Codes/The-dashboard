@@ -17,6 +17,7 @@ const allDeals = getRawDeals()
 export function useChart() {
   const {
     filters,
+    filtersKey,
     filterOptions,
     activeFilterCount,
     hasActiveFilters,
@@ -37,6 +38,7 @@ export function useChart() {
 
   return {
     filters,
+    filtersKey,
     filterOptions,
     activeFilterCount,
     hasActiveFilters,

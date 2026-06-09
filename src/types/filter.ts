@@ -34,6 +34,7 @@ type FilterOptions = {
 
 type PipelineFiltersProps = {
   filters: FilterOptions
+  filtersKey: string
   filterOptions: PipelineFilterOptions
   activeFilterCount: number
   hasActiveFilters: boolean
@@ -54,4 +55,8 @@ type DealSortOption =
   | "date_desc"
   | "date_asc"
 
-  export type { FilterOptions, DateRange, PipelineFilterOptions, PipelineFiltersProps, DealSortOption, FilterFieldsProps };
+  type SearchParamsLike = {
+    get(name: string): string | null
+  }  
+
+  export type { FilterOptions, SearchParamsLike, DateRange, PipelineFilterOptions, PipelineFiltersProps, DealSortOption, FilterFieldsProps };
