@@ -10,7 +10,7 @@ import { SectionCards } from "@/components/pipeline/cards"
 import { PipelineFilters } from "@/components/pipeline/filter/filters"
 import { useChart } from "@/hooks/pipeline/use-chart"
 
-export function PipelineDashboard() {
+export const PipelineDashboard = () => {
   const {
     filters,
     filtersKey,
