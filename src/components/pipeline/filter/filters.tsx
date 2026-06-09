@@ -9,20 +9,19 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { useFilters } from "@/hooks/pipeline/use-filters"
 import { PipelineFiltersProps } from "@/types/filter"
 import { SlidersHorizontalIcon } from "lucide-react"
 
 export function PipelineFilters({
   filters,
   filterOptions,
+  activeFilterCount,
+  hasActiveFilters,
   filteredCount,
   totalCount,
   onFilterChange,
   onClearFilters,
 }: PipelineFiltersProps) {
-  const { activeFilterCount } = useFilters(filters)
-
   return (
     <div className="sticky top-0 z-20 border-b bg-background px-4 py-3 lg:px-6">
       <div className="flex items-center justify-between gap-3 lg:hidden">
@@ -48,7 +47,10 @@ export function PipelineFilters({
                 filterOptions={filterOptions}
                 onFilterChange={onFilterChange}
               />
-              <FilterReset filters={filters} onClearFilters={onClearFilters} />
+              <FilterReset
+                hasActiveFilters={hasActiveFilters}
+                onClearFilters={onClearFilters}
+              />
             </div>
           </DrawerContent>
         </Drawer>
@@ -64,7 +66,10 @@ export function PipelineFilters({
           onFilterChange={onFilterChange}
         />
         <div className="flex items-center justify-between xl:flex-1">
-          <FilterReset filters={filters} onClearFilters={onClearFilters} />
+          <FilterReset
+            hasActiveFilters={hasActiveFilters}
+            onClearFilters={onClearFilters}
+          />
           <p className="text-sm text-muted-foreground lg:ml-auto py-1">
             Showing {filteredCount} of {totalCount} deals
           </p>
