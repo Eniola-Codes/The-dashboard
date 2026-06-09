@@ -22,6 +22,7 @@ type PipelineMetrics = {
     minDealValue: number;
     maxDealValue: number;
     dealsByStage: Record<string, number>;
+    revenueByStage: Record<string, number>;
     revenueByVertical: Record<string, number>;
     dealsByVertical: Record<string, number>;
     winRateByOwner: Record<string, { won: number; total: number; rate: number }>;
@@ -29,19 +30,17 @@ type PipelineMetrics = {
     topPerformingVertical: string;
     topOwnerByDeals: { owner: string; dealCount: number } | null;
     valueByOwner: Record<string, number>;
+    wonValueByOwner: Record<string, number>;
+    valueBySource: Record<string, number>;
+    wonValueBySource: Record<string, number>;
+    pipelineTrendByDay: PipelineTrendPoint[];
   }
 
-type DateRange =
-    | "all"
-    | "last_month"
-    | "last_3_months"
-    | "last_6_months";
-
-type FilterOptions = {
-    vertical?: string;
-    owner?: string;
-    stage?: string;
-    dateRange?: DateRange;
+type PipelineTrendPoint = {
+    date: string;
+    deals: number;
+    value: number;
   }
 
-export type { Deal, PipelineMetrics, FilterOptions, DateRange };
+
+export type { Deal, PipelineMetrics, PipelineTrendPoint };

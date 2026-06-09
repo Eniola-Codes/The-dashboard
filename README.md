@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pipeline Dashboard
 
-## Getting Started
+A sales pipeline dashboard built to answer the questions a founder asks every week. How much is in the pipe, where it sits, who’s driving it, and which deals to look at next.
 
-First, run the development server:
+**Live demo:** [https://5ss-the-dashboard-task.vercel.app/](https://5ss-the-dashboard-task.vercel.app/)
+
+**Repo:** [github.com/Eniola-Codes/The-dashboard](https://github.com/Eniola-Codes/The-dashboard)
+
+---
+
+## What it answers
+
+| Founder question | Where to look |
+| --- | --- |
+| **How much pipeline do I have, and where is it?** | KPI cards (total value, deal count, won value, average deal size) + stage funnel chart |
+| **Who and which channels are working?** | Owner performance chart + lead source chart |
+| **Show me the deals** | Filterable deals table — filter by date, stage, owner, vertical and source  + search, sort and export CSV |
+| **How is pipeline trending over time?** | Pipeline trend chart + revenue by vertical |
+
+All KPIs, charts, and the table share the same filtered dataset, change a filter and the whole dashboard updates together.
+
+---
+
+## Features
+
+- **Five global filters** — date range, stage, owner, vertical, source
+- **URL-synced filters** — refresh or share a link; filter state persists in the query string
+- **KPI cards** — pipeline value, deal count, won value, average deal value
+- **Charts** — stage funnel, vertical breakdown, owner vs won value, pipeline by source, daily trend
+- **Deals table** — search, sort, pagination, CSV export
+- **Responsive layout** — inline filters on desktop, bottom drawer on mobile
+
+---
+
+## Tech stack
+
+- [Next.js 16](https://nextjs.org) (App Router) + [React 19](https://react.dev)
+- [Recharts](https://recharts.org) — charts
+- [TanStack Table](https://tanstack.com/table) — sortable, searchable deals table
+- [Tailwind CSS 4](https://tailwindcss.com) + [shadcn/ui](https://ui.shadcn.com) — UI components
+- Static pipeline data (`src/lib/data/pipeline.json`) — no backend required
+
+---
+
+## Run locally
+
+**Requirements:** Node.js **20.9+**
 
 ```bash
+git clone https://github.com/Eniola-Codes/The-dashboard.git
+cd The-dashboard
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Production build:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Design choices
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The dashboard is built around **filter-driven metrics**: one `filterDeals` pass feeds KPIs, every chart, and the table, so numbers never disagree. **Won value** is featured alongside deal counts because revenue matters more to a founder than win-rate percentages alone. Charts emphasize **pipeline value and won value by owner and source** rather than random data. Filters sync to the **URL** so a filtered view can be bookmarked or shared without extra state management. The UI uses a dark theme with shadcn components for a clean, product-ready feel on desktop and mobile.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Project structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/                    # Next.js App Router pages
+├── components/pipeline/    # Dashboard UI (filters, cards, charts, table)
+├── hooks/pipeline/         # useChart, useTable, useFilters
+├── lib/
+│   ├── data/pipeline.json  # Deal dataset
+│   └── utils/pipeline/     # filter, metrics, chart, table helpers
+└── types/                  # Deal, FilterOptions, PipelineMetrics
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## License
+
+Private — built as a take-home assignment.

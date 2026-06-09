@@ -1,5 +1,7 @@
+import { Suspense } from "react"
+
 import { AppSidebar } from "@/components/layout/sidebar"
-import { PipelineDashboard } from "@/components/pipeline-dashboard"
+import { PipelineDashboard } from "@/components/pipeline"
 import { NavHeader } from "@/components/layout/nav-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
@@ -9,15 +11,17 @@ export default function Home() {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <NavHeader />
-        <div className="flex flex-col gap-4 px-2 pb-2 md:gap-6 md:px-4 md:pb-4">
-          <div className="@container/main flex flex-col gap-4 rounded-xl bg-background py-4 shadow-sm md:gap-6 md:py-6">
-            <PipelineDashboard />
-            {/* <div className="px-4 lg:px-6">
-              <ChartAreaInteractive />
-            </div>
-            <DataTable data={dashboard} /> */}
+          <div className="@container/main flex flex-col gap-4 rounded-xl bg-background shadow-sm md:gap-6 pb-2 md:pb-4">
+            <Suspense
+              fallback={
+                <div className="sticky top-0 z-20 border-b bg-background px-4 py-3 lg:px-6">
+                  <div className="h-9 w-full max-w-md animate-pulse rounded-md bg-muted" />
+                </div>
+              }
+            >
+              <PipelineDashboard />
+            </Suspense>
           </div>
-        </div>
       </SidebarInset>
     </SidebarProvider>
   )
