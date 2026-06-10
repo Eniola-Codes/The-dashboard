@@ -1,15 +1,14 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
-type FilterResetProps = {
-  hasActiveFilters: boolean
-  onClearFilters: () => void
-}
+import { Button } from "@/components/ui/button"
+import { FilterResetProps } from "@/types/filter"
 
 export function FilterReset({
   hasActiveFilters,
-  onClearFilters,
+  clearHref,
+  onClear,
 }: FilterResetProps) {
   if (!hasActiveFilters) {
     return null
@@ -17,12 +16,14 @@ export function FilterReset({
 
   return (
     <Button
+      asChild
       variant="ghost"
       size="sm"
-      onClick={onClearFilters}
       className="cursor-pointer p-0 hover:!bg-transparent"
     >
-      Clear all
+      <Link href={clearHref} replace scroll={false} onClick={onClear}>
+        Clear all
+      </Link>
     </Button>
   )
 }

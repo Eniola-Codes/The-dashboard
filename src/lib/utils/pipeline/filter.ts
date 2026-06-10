@@ -178,13 +178,42 @@ function buildFilterSearchParams(filters: FilterOptions): URLSearchParams {
   return params
 }
 
-function buildFilterUrl(pathname: string, filters: FilterOptions): string {
-  const query = buildFilterSearchParams(filters).toString()
+const FILTER_QUERY_KEYS = [
+  "dateRange",
+  "stage",
+  "owner",
+  "vertical",
+  "source",
+] as const
+
+function buildFilterHref(
+  pathname: string,
+  currentQuery: string,
+  filters: FilterOptions
+): string {
+  const params = new URLSearchParams(currentQuery)
+
+  for (const key of FILTER_QUERY_KEYS) {
+    params.delete(key)
+  }
+
+  const nextParams = buildFilterSearchParams(filters)
+  nextParams.forEach((value, key) => {
+    params.set(key, value)
+  })
+
+  const query = params.toString()
   return query ? `${pathname}?${query}` : pathname
+}
+
+function buildFilterUrl(pathname: string, filters: FilterOptions): string {
+  return buildFilterHref(pathname, "", filters)
 }
 
 export {
   DATE_RANGE_OPTIONS,
+  FILTER_QUERY_KEYS,
+  buildFilterHref,
   buildFilterSearchParams,
   buildFilterUrl,
   filterDeals,

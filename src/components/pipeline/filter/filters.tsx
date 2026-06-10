@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { SlidersHorizontalIcon } from "lucide-react"
+
 import { FilterFields } from "@/components/pipeline/filter/filter-fields"
 import { FilterReset } from "@/components/pipeline/filter/filter-reset"
 import { Badge } from "@/components/ui/badge"
@@ -21,17 +22,12 @@ export function PipelineFilters({
   filterOptions,
   activeFilterCount,
   hasActiveFilters,
+  clearHref,
   filteredCount,
   totalCount,
   onFilterChange,
-  onClearFilters,
 }: PipelineFiltersProps) {
   const [drawerOpen, setDrawerOpen] = React.useState(false)
-
-  function handleClearFilters() {
-    onClearFilters()
-    setDrawerOpen(false)
-  }
 
   return (
     <div className="sticky top-0 z-20 border-b bg-background px-4 py-3 lg:px-6">
@@ -62,7 +58,8 @@ export function PipelineFilters({
                 />
                 <FilterReset
                   hasActiveFilters={hasActiveFilters}
-                  onClearFilters={handleClearFilters}
+                  clearHref={clearHref}
+                  onClear={() => setDrawerOpen(false)}
                 />
               </div>
             </DrawerContent>
@@ -81,10 +78,7 @@ export function PipelineFilters({
           onFilterChange={onFilterChange}
         />
         <div className="flex items-center justify-between xl:flex-1">
-          <FilterReset
-            hasActiveFilters={hasActiveFilters}
-            onClearFilters={onClearFilters}
-          />
+          <FilterReset hasActiveFilters={hasActiveFilters} clearHref={clearHref} />
           <p className="text-sm text-muted-foreground lg:ml-auto py-1">
             Showing {filteredCount} of {totalCount} deals
           </p>

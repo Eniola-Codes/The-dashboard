@@ -11,25 +11,25 @@ type FilterOptions = {
     stage?: string;
     source?: string;
     dateRange?: DateRange;
-  }
+}
 
-  type FilterFieldsProps = {
+type FilterFieldsProps = {
     filters: FilterOptions
     filterOptions: PipelineFilterOptions
     onFilterChange: <K extends keyof FilterOptions>(
-      key: K,
-      value: FilterOptions[K] | "all"
+        key: K,
+        value: FilterOptions[K] | "all"
     ) => void
     className?: string
     triggerClassName?: string
-  }
-  
+}
 
-  type PipelineFilterOptions = {
-  verticals: string[]
-  owners: string[]
-  stages: string[]
-  sources: string[]
+
+type PipelineFilterOptions = {
+    verticals: string[]
+    owners: string[]
+    stages: string[]
+    sources: string[]
 }
 
 type PipelineFiltersProps = {
@@ -38,14 +38,21 @@ type PipelineFiltersProps = {
   filterOptions: PipelineFilterOptions
   activeFilterCount: number
   hasActiveFilters: boolean
+  clearHref: string
   filteredCount: number
   totalCount: number
   onFilterChange: <K extends keyof FilterOptions>(
     key: K,
     value: FilterOptions[K] | "all"
   ) => void
-  onClearFilters: () => void
 }
+
+type FilterResetProps = {
+  hasActiveFilters: boolean
+  clearHref: string
+  onClear?: () => void
+}
+
 
 type DealSortOption =
   | "value_desc"
@@ -55,8 +62,17 @@ type DealSortOption =
   | "date_desc"
   | "date_asc"
 
-  type SearchParamsLike = {
-    get(name: string): string | null
-  }  
+type SearchParamsLike = {
+  get(name: string): string | null
+}
 
-  export type { FilterOptions, SearchParamsLike, DateRange, PipelineFilterOptions, PipelineFiltersProps, DealSortOption, FilterFieldsProps };
+export type {
+  FilterResetProps,
+  FilterOptions,
+  SearchParamsLike,
+  DateRange,
+  PipelineFilterOptions,
+  PipelineFiltersProps,
+  DealSortOption,
+  FilterFieldsProps,
+}
