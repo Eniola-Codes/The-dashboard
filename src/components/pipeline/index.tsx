@@ -13,10 +13,8 @@ import { useChart } from "@/hooks/pipeline/use-chart"
 export const PipelineDashboard = () => {
   const {
     filters,
-    filtersKey,
     filterOptions,
     activeFilterCount,
-    hasActiveFilters,
     filteredDeals,
     metrics,
     totalCount,
@@ -29,10 +27,8 @@ export const PipelineDashboard = () => {
     <div className="flex flex-col gap-4 md:gap-6">
       <PipelineFilters
         filters={filters}
-        filtersKey={filtersKey}
         filterOptions={filterOptions}
         activeFilterCount={activeFilterCount}
-        hasActiveFilters={hasActiveFilters}
         filteredCount={filteredCount}
         totalCount={totalCount}
         onFilterChange={updateFilter}

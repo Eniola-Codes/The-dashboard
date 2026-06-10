@@ -1,17 +1,13 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-
-type FilterResetProps = {
-  hasActiveFilters: boolean
-  onClearFilters: () => void
-}
+import { FilterResetProps } from "@/types/filter"
 
 export function FilterReset({
-  hasActiveFilters,
+  activeFilterCount,
   onClearFilters,
 }: FilterResetProps) {
-  if (!hasActiveFilters) {
+  if (activeFilterCount === 0) {
     return null
   }
 

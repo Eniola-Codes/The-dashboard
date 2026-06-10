@@ -24,7 +24,6 @@ All KPIs, charts, and the table share the same filtered dataset, change a filter
 ## Features
 
 - **Five global filters** — date range, stage, owner, vertical, source
-- **URL-synced filters** — refresh or share a link; filter state persists in the query string
 - **KPI cards** — pipeline value, deal count, won value, average deal value
 - **Charts** — stage funnel, vertical breakdown, owner vs won value, pipeline by source, daily trend
 - **Deals table** — search, sort, pagination, CSV export
@@ -66,7 +65,7 @@ npm start
 
 ## Design choices
 
-The dashboard is built around **filter-driven metrics**: one `filterDeals` pass feeds KPIs, every chart, and the table, so numbers never disagree. **Won value** is featured alongside deal counts because revenue matters more to a founder than win-rate percentages alone. Charts emphasize **pipeline value and won value by owner and source** rather than random data. Filters sync to the **URL** so a filtered view can be bookmarked or shared without extra state management. The UI uses a dark theme with shadcn components for a clean, product-ready feel on desktop and mobile.
+The dashboard is built around **filter-driven metrics**: one `filterDeals` pass feeds KPIs, every chart, and the table, so numbers never disagree. **Won value** is featured alongside deal counts because revenue matters more to a founder than win-rate percentages alone. Charts emphasize **pipeline value and won value by owner and source** rather than random data. The UI uses a dark theme with shadcn components for a clean, product-ready feel on desktop and mobile.
 
 ---
 
