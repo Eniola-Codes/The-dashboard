@@ -19,7 +19,7 @@ import { formatCurrency, STAGE_CHART_LEGEND_ORDER } from "@/lib/utils/pipeline"
 import { type PipelineMetrics } from "@/types/pipeline"
 
 export function PipelineStageChart({ metrics }: { metrics: PipelineMetrics }) {
-  const { stageChartData } = useChartData(metrics)
+  const { hasDeals, stageChartData } = useChartData(metrics)
 
   return (
     <Card className="w-full">
@@ -30,6 +30,7 @@ export function PipelineStageChart({ metrics }: { metrics: PipelineMetrics }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {hasDeals ? (
           <ChartContainer config={stageChartConfig} className="aspect-auto h-[350px] w-full">
             <BarChart
               data={stageChartData}
@@ -112,6 +113,11 @@ export function PipelineStageChart({ metrics }: { metrics: PipelineMetrics }) {
               />
             </BarChart>
           </ChartContainer>
+        ) : (
+          <div className="flex h-[350px] items-center justify-center text-sm text-muted-foreground">
+            No deals in this view
+          </div>
+        )}
       </CardContent>
     </Card>
   )

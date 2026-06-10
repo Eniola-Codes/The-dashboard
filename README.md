@@ -6,6 +6,8 @@ A sales pipeline dashboard built to answer the questions a founder asks every we
 
 **Repo:** [github.com/Eniola-Codes/The-dashboard](https://github.com/Eniola-Codes/The-dashboard)
 
+**Walkthrough:** [3-min Loom](http://loom.com/share/aa2b75e068104c04a8483b66de742b53)
+
 ---
 
 ## What it answers
@@ -14,10 +16,45 @@ A sales pipeline dashboard built to answer the questions a founder asks every we
 | --- | --- |
 | **How much pipeline do I have, and where is it?** | KPI cards (total value, deal count, won value, average deal size) + stage funnel chart |
 | **Who and which channels are working?** | Owner performance chart + lead source chart |
-| **Show me the deals** | Filterable deals table — filter by date, stage, owner, vertical and source  + search, sort and export CSV |
+| **Show me the deals** | Filterable deals table — filter by date, stage, owner, vertical, and source + search, sort, and CSV export |
 | **How is pipeline trending over time?** | Pipeline trend chart + revenue by vertical |
 
 All KPIs, charts, and the table share the same filtered dataset, change a filter and the whole dashboard updates together.
+
+---
+
+## Install blueprint
+
+**Client context:** Founder reviews pipeline weekly from a spreadsheet. No single view exists, data lives across tabs, owners update manually, and getting answers means exporting the sheet and building pivot tables every week.
+
+**Version 1 — shipped (this dashboard)**
+
+- Centralized the full deal dataset into a single filtered view
+- One filter pass drives all KPIs, charts, and the table so the numbers never disagree
+- Founder answers weekly pipeline questions without opening a spreadsheet
+
+**Version 2 — planned (not built yet)**
+
+- **Stale deal agent** — flags deals with no activity in 14+ days, notifies owner via Slack and email
+- **Weekly pipeline brief agent** — Monday morning summary for the founder. Top risks, biggest opportunities, stale deals by representative
+- **CRM read sync** — connect HubSpot or Google Sheets as live data source, replacing the static JSON file
+
+**Integration map**
+
+CRM (read) → dashboard dataset → Slack and email (alerts + brief)
+
+**Rollout order**
+
+1. Read sync — live data before any automation
+2. Stale deal alerts — low risk, high signal
+3. Weekly brief agent — founder reviews one output, not twelve charts
+4. Draft follow-ups — human approves before send
+
+**What stays human:** Reps own follow-up, agents flag and draft. Founder approves before anything is sent.
+
+**Risks:** Stale alerts only work if `last_activity` is trusted in the CRM. No write-back until read sync is stable.
+
+**Success metric:** Founder opens one view on Monday. Does not export a CSV. Does not ask a rep for a pipeline update.
 
 ---
 
@@ -65,7 +102,7 @@ npm start
 
 ## Design choices
 
-The dashboard is built around **filter-driven metrics**: one `filterDeals` pass feeds KPIs, every chart, and the table, so numbers never disagree. **Won value** is featured alongside deal counts because revenue matters more to a founder than win-rate percentages alone. Charts emphasize **pipeline value and won value by owner and source** rather than random data. The UI uses a dark theme with shadcn components for a clean, product-ready feel on desktop and mobile.
+The dashboard is built around **filter-driven metrics**. One shared filter pass feeds KPIs, every chart, and the table, so numbers never disagree. **Won value** sits alongside deal counts because revenue matters more to a founder than win-rate alone. Charts focus on **pipeline value and won value by owner and source** so you can see who carries volume and who actually closes. The layout is **responsive** with inline filters on desktop, a bottom drawer on mobile.
 
 ---
 
@@ -84,6 +121,4 @@ src/
 
 ---
 
-## License
-
-Private — built as a take-home assignment.
+Built as a pipeline install demo.

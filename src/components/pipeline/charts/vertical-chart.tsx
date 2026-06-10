@@ -17,7 +17,7 @@ import { formatCurrency } from "@/lib/utils/pipeline"
 import { type PipelineMetrics } from "@/types/pipeline"
 
 export function VerticalChart({ metrics }: { metrics: PipelineMetrics }) {
-  const { verticalChartData } = useChartData(metrics)
+  const { hasDeals, verticalChartData } = useChartData(metrics)
 
   return (
     <Card className="h-full w-full">
@@ -28,6 +28,7 @@ export function VerticalChart({ metrics }: { metrics: PipelineMetrics }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {hasDeals ? (
           <ChartContainer config={verticalChartConfig} className="aspect-auto h-[280px] w-full min-w-0">
             <BarChart
               data={verticalChartData}
@@ -65,6 +66,11 @@ export function VerticalChart({ metrics }: { metrics: PipelineMetrics }) {
               <Bar dataKey="value" fill="var(--color-value)" radius={4} />
             </BarChart>
           </ChartContainer>
+        ) : (
+          <div className="flex h-[280px] items-center justify-center text-sm text-muted-foreground">
+            No deals in this view
+          </div>
+        )}
       </CardContent>
     </Card>
   )
