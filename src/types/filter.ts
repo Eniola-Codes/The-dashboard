@@ -1,58 +1,53 @@
 type DateRange =
-    | "all"
-    | "last_week"
-    | "last_month"
-    | "last_3_months"
-    | "last_6_months";
+  | "all"
+  | "last_week"
+  | "last_month"
+  | "last_3_months"
+  | "last_6_months"
 
 type FilterOptions = {
-    vertical?: string;
-    owner?: string;
-    stage?: string;
-    source?: string;
-    dateRange?: DateRange;
+  vertical?: string
+  owner?: string
+  stage?: string
+  source?: string
+  dateRange?: DateRange
 }
 
 type FilterFieldsProps = {
-    filters: FilterOptions
-    filterOptions: PipelineFilterOptions
-    onFilterChange: <K extends keyof FilterOptions>(
-        key: K,
-        value: FilterOptions[K] | "all"
-    ) => void
-    className?: string
-    triggerClassName?: string
+  filters: FilterOptions
+  filterOptions: PipelineFilterOptions
+  onFilterChange: <K extends keyof FilterOptions>(
+    key: K,
+    value: FilterOptions[K] | "all"
+  ) => void
+  className?: string
+  triggerClassName?: string
 }
 
-
 type PipelineFilterOptions = {
-    verticals: string[]
-    owners: string[]
-    stages: string[]
-    sources: string[]
+  verticals: string[]
+  owners: string[]
+  stages: string[]
+  sources: string[]
 }
 
 type PipelineFiltersProps = {
   filters: FilterOptions
-  filtersKey: string
   filterOptions: PipelineFilterOptions
   activeFilterCount: number
-  hasActiveFilters: boolean
   filteredCount: number
   totalCount: number
   onFilterChange: <K extends keyof FilterOptions>(
     key: K,
     value: FilterOptions[K] | "all"
   ) => void
-  clearFiltersHref: string
+  onClearFilters: () => void
 }
 
 type FilterResetProps = {
-  hasActiveFilters: boolean
-  clearFiltersHref: string
-  onClear?: () => void
+  activeFilterCount: number
+  onClearFilters: () => void
 }
-
 
 type DealSortOption =
   | "value_desc"

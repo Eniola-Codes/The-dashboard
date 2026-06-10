@@ -18,18 +18,17 @@ import { PipelineFiltersProps } from "@/types/filter"
 
 export function PipelineFilters({
   filters,
-  filtersKey,
   filterOptions,
   activeFilterCount,
-  hasActiveFilters,
   filteredCount,
   totalCount,
   onFilterChange,
-  clearFiltersHref,
+  onClearFilters,
 }: PipelineFiltersProps) {
   const [drawerOpen, setDrawerOpen] = React.useState(false)
 
   function handleClearFilters() {
+    onClearFilters()
     setDrawerOpen(false)
   }
 
@@ -55,15 +54,13 @@ export function PipelineFilters({
               </DrawerHeader>
               <div className="flex flex-col gap-4 px-4 pb-6">
                 <FilterFields
-                  key={filtersKey}
                   filters={filters}
                   filterOptions={filterOptions}
                   onFilterChange={onFilterChange}
                 />
                 <FilterReset
-                  hasActiveFilters={hasActiveFilters}
-                  clearFiltersHref={clearFiltersHref}
-                  onClear={handleClearFilters}
+                  activeFilterCount={activeFilterCount}
+                  onClearFilters={handleClearFilters}
                 />
               </div>
             </DrawerContent>
@@ -76,15 +73,14 @@ export function PipelineFilters({
 
       <div className="hidden flex-col gap-3 lg:flex xl:flex-row xl:items-center xl:gap-5">
         <FilterFields
-          key={filtersKey}
           filters={filters}
           filterOptions={filterOptions}
           onFilterChange={onFilterChange}
         />
         <div className="flex items-center justify-between xl:flex-1">
           <FilterReset
-            hasActiveFilters={hasActiveFilters}
-            clearFiltersHref={clearFiltersHref}
+            activeFilterCount={activeFilterCount}
+            onClearFilters={onClearFilters}
           />
           <p className="text-sm text-muted-foreground lg:ml-auto py-1">
             Showing {filteredCount} of {totalCount} deals

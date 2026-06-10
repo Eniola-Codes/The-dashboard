@@ -13,30 +13,26 @@ import { useChart } from "@/hooks/pipeline/use-chart"
 export const PipelineDashboard = () => {
   const {
     filters,
-    filtersKey,
     filterOptions,
     activeFilterCount,
-    hasActiveFilters,
     filteredDeals,
     metrics,
     totalCount,
     filteredCount,
     updateFilter,
-    clearFiltersHref,
+    clearFilters,
   } = useChart()
 
   return (
     <div className="flex flex-col gap-4 md:gap-6">
       <PipelineFilters
         filters={filters}
-        filtersKey={filtersKey}
         filterOptions={filterOptions}
         activeFilterCount={activeFilterCount}
-        hasActiveFilters={hasActiveFilters}
         filteredCount={filteredCount}
         totalCount={totalCount}
         onFilterChange={updateFilter}
-        clearFiltersHref={clearFiltersHref}
+        onClearFilters={clearFilters}
       />
       <SectionCards metrics={metrics} />
       <div className="flex w-full flex-col gap-4 px-4 md:gap-6 lg:px-6">

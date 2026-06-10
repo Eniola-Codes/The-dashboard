@@ -15,16 +15,8 @@ import { PipelineMetrics } from "@/types/pipeline"
 const allDeals = getRawDeals()
 
 export function useChart() {
-  const {
-    filters,
-    filtersKey,
-    filterOptions,
-    activeFilterCount,
-    hasActiveFilters,
-    updateFilter,
-    clearFiltersHref,
-    totalCount,
-  } = useFilters()
+  const { filters, filterOptions, activeFilterCount, updateFilter, clearFilters, totalCount } =
+    useFilters()
 
   const filteredDeals = React.useMemo(
     () => filterDeals(allDeals, filters),
@@ -38,16 +30,14 @@ export function useChart() {
 
   return {
     filters,
-    filtersKey,
     filterOptions,
     activeFilterCount,
-    hasActiveFilters,
     filteredDeals,
     metrics,
     totalCount,
     filteredCount: filteredDeals.length,
     updateFilter,
-    clearFiltersHref,
+    clearFilters,
   }
 }
 
@@ -99,8 +89,6 @@ export function useChartData(metrics: PipelineMetrics) {
     [metrics]
   )
 
-  const trendChartData = metrics.pipelineTrendByDay
-
   return {
     hasWonDeals,
     hasDeals,
@@ -110,6 +98,6 @@ export function useChartData(metrics: PipelineMetrics) {
     stageChartData,
     sourceChartData,
     ownerChartData,
-    trendChartData,
+    trendChartData: metrics.pipelineTrendByDay,
   }
 }

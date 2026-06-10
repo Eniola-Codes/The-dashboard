@@ -1,12 +1,6 @@
 import * as React from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { getFilterOptions, getRawDeals } from "@/lib/utils/pipeline"
-import {
-  buildFilterHref,
-  clearFiltersHref,
-  parseFiltersFromSearchParams,
-} from "@/lib/utils/pipeline/filter"
 import { FilterOptions } from "@/types/filter"
 
 const allDeals = getRawDeals()
@@ -23,43 +17,33 @@ function countActiveFilters(filters: FilterOptions): number {
 }
 
 export function useFilters() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const query = searchParams.toString()
-
-  const filters = React.useMemo(
-    () => parseFiltersFromSearchParams(new URLSearchParams(query), filterOptions),
-    [query]
-  )
+  const [filters, setFilters] = React.useState<FilterOptions>({})
 
   const updateFilter = React.useCallback(
     <K extends keyof FilterOptions>(
       key: K,
       value: FilterOptions[K] | "all"
     ) => {
-      const href = buildFilterHref(pathname, new URLSearchParams(query), {
-        [key]: value === "all" ? undefined : String(value),
-      })
-
-      router.replace(href, { scroll: false })
+      setFilters((current) => ({
+        ...current,
+        [key]: value === "all" ? undefined : value,
+      }))
     },
-    [pathname, query, router]
+    []
   )
 
-  const activeFilterCount = React.useMemo(
-    () => countActiveFilters(filters),
-    [filters]
-  )
+  const clearFilters = React.useCallback(() => {
+    setFilters({})
+  }, [])
+
+  const activeFilterCount = countActiveFilters(filters)
 
   return {
     filters,
-    filtersKey: query,
     filterOptions,
     activeFilterCount,
-    hasActiveFilters: activeFilterCount > 0,
     updateFilter,
-    clearFiltersHref: clearFiltersHref(pathname),
+    clearFilters,
     totalCount: allDeals.length,
   }
 }
