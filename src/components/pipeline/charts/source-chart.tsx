@@ -19,7 +19,7 @@ import { formatCurrency } from "@/lib/utils/pipeline"
 import { type PipelineMetrics } from "@/types/pipeline"
 
 export function SourceChart({ metrics }: { metrics: PipelineMetrics }) {
-  const { sourceChartData } = useChartData(metrics)
+  const { hasDeals, sourceChartData } = useChartData(metrics)
 
   return (
     <Card className="w-full">
@@ -30,6 +30,7 @@ export function SourceChart({ metrics }: { metrics: PipelineMetrics }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {hasDeals ? (
           <ChartContainer config={pipelineValueWonChartConfig} className="aspect-auto h-[280px] w-full min-w-0">
             <BarChart
               data={sourceChartData}
@@ -79,6 +80,11 @@ export function SourceChart({ metrics }: { metrics: PipelineMetrics }) {
               />
             </BarChart>
           </ChartContainer>
+        ) : (
+          <div className="flex h-[280px] items-center justify-center text-sm text-muted-foreground">
+            No deals in this view
+          </div>
+        )}
       </CardContent>
     </Card>
   )

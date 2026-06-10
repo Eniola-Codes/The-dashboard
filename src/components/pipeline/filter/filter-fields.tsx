@@ -17,7 +17,7 @@ export function FilterFields({
   triggerClassName = "w-full lg:w-32 xl:w-36",
 }: FilterFieldsProps) {
   return (
-    <div className={cn("flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center", className)}>
+    <div className={cn("flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between", className)}>
       <Select
         value={filters.dateRange ?? "all"}
         onValueChange={(value) =>
