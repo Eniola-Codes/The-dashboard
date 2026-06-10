@@ -4,6 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { getFilterOptions, getRawDeals } from "@/lib/utils/pipeline"
 import {
   buildFilterHref,
+  clearFiltersHref,
   parseFiltersFromSearchParams,
 } from "@/lib/utils/pipeline/filter"
 import { FilterOptions } from "@/types/filter"
@@ -21,37 +22,15 @@ function countActiveFilters(filters: FilterOptions): number {
   return count
 }
 
-function parseFiltersFromQuery(query: string): FilterOptions {
-  return parseFiltersFromSearchParams(new URLSearchParams(query), filterOptions)
-}
-
 export function useFilters() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const searchParamsKey = searchParams.toString()
+  const query = searchParams.toString()
 
   const filters = React.useMemo(
-    () => parseFiltersFromQuery(searchParamsKey),
-    [searchParamsKey]
-  )
-
-  const clearHref = React.useMemo(
-    () => buildFilterHref(pathname, searchParamsKey, {}),
-    [pathname, searchParamsKey]
-  )
-
-  const navigateToFilters = React.useCallback(
-    (nextFilters: FilterOptions) => {
-      const href = buildFilterHref(pathname, searchParamsKey, nextFilters)
-
-      if (href === `${pathname}${searchParamsKey ? `?${searchParamsKey}` : ""}`) {
-        return
-      }
-
-      router.replace(href, { scroll: false })
-    },
-    [pathname, router, searchParamsKey]
+    () => parseFiltersFromSearchParams(new URLSearchParams(query), filterOptions),
+    [query]
   )
 
   const updateFilter = React.useCallback(
@@ -59,15 +38,13 @@ export function useFilters() {
       key: K,
       value: FilterOptions[K] | "all"
     ) => {
-      const currentFilters = parseFiltersFromQuery(searchParamsKey)
-      const nextFilters: FilterOptions = {
-        ...currentFilters,
-        [key]: value === "all" ? undefined : value,
-      }
+      const href = buildFilterHref(pathname, new URLSearchParams(query), {
+        [key]: value === "all" ? undefined : String(value),
+      })
 
-      navigateToFilters(nextFilters)
+      router.replace(href, { scroll: false })
     },
-    [navigateToFilters, searchParamsKey]
+    [pathname, query, router]
   )
 
   const activeFilterCount = React.useMemo(
@@ -77,12 +54,12 @@ export function useFilters() {
 
   return {
     filters,
-    filtersKey: searchParamsKey,
+    filtersKey: query,
     filterOptions,
     activeFilterCount,
     hasActiveFilters: activeFilterCount > 0,
-    clearHref,
     updateFilter,
+    clearFiltersHref: clearFiltersHref(pathname),
     totalCount: allDeals.length,
   }
 }

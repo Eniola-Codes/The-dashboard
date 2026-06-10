@@ -21,8 +21,8 @@ export function useChart() {
     filterOptions,
     activeFilterCount,
     hasActiveFilters,
-    clearHref,
     updateFilter,
+    clearFiltersHref,
     totalCount,
   } = useFilters()
 
@@ -42,12 +42,12 @@ export function useChart() {
     filterOptions,
     activeFilterCount,
     hasActiveFilters,
-    clearHref,
     filteredDeals,
     metrics,
     totalCount,
     filteredCount: filteredDeals.length,
     updateFilter,
+    clearFiltersHref,
   }
 }
 

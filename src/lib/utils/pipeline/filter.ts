@@ -1,5 +1,5 @@
 import { Deal } from "@/types/pipeline"
-import { DateRange, FilterOptions, PipelineFilterOptions, SearchParamsLike } from "@/types/filter"
+import { DateRange, FilterOptions, PipelineFilterOptions } from "@/types/filter"
 
 import { PIPELINE_SOURCE_ORDER } from "./chart"
 
@@ -10,10 +10,6 @@ const DATE_RANGE_OPTIONS: { value: DateRange; label: string }[] = [
   { value: "last_3_months", label: "Last 3 months" },
   { value: "last_6_months", label: "Last 6 months" },
 ]
-
-const VALID_DATE_RANGES = new Set<DateRange>(
-  DATE_RANGE_OPTIONS.map((option) => option.value)
-)
 
 function startOfDay(date: Date): Date {
   const normalizedDate = new Date(date)
@@ -96,6 +92,18 @@ function getFilterOptions(deals: Deal[]): PipelineFilterOptions {
   }
 }
 
+const FILTER_QUERY_KEYS = [
+  "dateRange",
+  "stage",
+  "owner",
+  "vertical",
+  "source",
+] as const satisfies readonly (keyof FilterOptions)[]
+
+const VALID_DATE_RANGES = new Set<DateRange>(
+  DATE_RANGE_OPTIONS.map((option) => option.value)
+)
+
 function parseDateRange(value: string | null): DateRange | undefined {
   if (!value || value === "all" || !VALID_DATE_RANGES.has(value as DateRange)) {
     return undefined
@@ -116,7 +124,7 @@ function parseOptionValue(
 }
 
 function parseFiltersFromSearchParams(
-  searchParams: SearchParamsLike,
+  searchParams: URLSearchParams,
   filterOptions: PipelineFilterOptions
 ): FilterOptions {
   const filters: FilterOptions = {}
@@ -152,70 +160,39 @@ function parseFiltersFromSearchParams(
   return filters
 }
 
-function buildFilterSearchParams(filters: FilterOptions): URLSearchParams {
-  const params = new URLSearchParams()
-
-  if (filters.dateRange && filters.dateRange !== "all") {
-    params.set("dateRange", filters.dateRange)
-  }
-
-  if (filters.stage) {
-    params.set("stage", filters.stage)
-  }
-
-  if (filters.owner) {
-    params.set("owner", filters.owner)
-  }
-
-  if (filters.vertical) {
-    params.set("vertical", filters.vertical)
-  }
-
-  if (filters.source) {
-    params.set("source", filters.source)
-  }
-
-  return params
-}
-
-const FILTER_QUERY_KEYS = [
-  "dateRange",
-  "stage",
-  "owner",
-  "vertical",
-  "source",
-] as const
+type FilterHrefPatch = Partial<Record<keyof FilterOptions, string | undefined>>
 
 function buildFilterHref(
   pathname: string,
-  currentQuery: string,
-  filters: FilterOptions
+  searchParams: URLSearchParams,
+  patch: FilterHrefPatch
 ): string {
-  const params = new URLSearchParams(currentQuery)
+  const params = new URLSearchParams(searchParams.toString())
 
   for (const key of FILTER_QUERY_KEYS) {
-    params.delete(key)
-  }
+    if (!(key in patch)) continue
 
-  const nextParams = buildFilterSearchParams(filters)
-  nextParams.forEach((value, key) => {
-    params.set(key, value)
-  })
+    const value = patch[key]
+    if (!value || value === "all") {
+      params.delete(key)
+    } else {
+      params.set(key, value)
+    }
+  }
 
   const query = params.toString()
   return query ? `${pathname}?${query}` : pathname
 }
 
-function buildFilterUrl(pathname: string, filters: FilterOptions): string {
-  return buildFilterHref(pathname, "", filters)
+function clearFiltersHref(pathname: string): string {
+  return pathname
 }
 
 export {
   DATE_RANGE_OPTIONS,
   FILTER_QUERY_KEYS,
   buildFilterHref,
-  buildFilterSearchParams,
-  buildFilterUrl,
+  clearFiltersHref,
   filterDeals,
   getFilterOptions,
   parseFiltersFromSearchParams,

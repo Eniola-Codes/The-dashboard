@@ -7,7 +7,7 @@ import { FilterResetProps } from "@/types/filter"
 
 export function FilterReset({
   hasActiveFilters,
-  clearHref,
+  clearFiltersHref,
   onClear,
 }: FilterResetProps) {
   if (!hasActiveFilters) {
@@ -16,12 +16,12 @@ export function FilterReset({
 
   return (
     <Button
-      asChild
       variant="ghost"
       size="sm"
+      asChild
       className="cursor-pointer p-0 hover:!bg-transparent"
     >
-      <Link href={clearHref} replace scroll={false} onClick={onClear}>
+      <Link href={clearFiltersHref} replace scroll={false} onClick={onClear}>
         Clear all
       </Link>
     </Button>

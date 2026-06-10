@@ -17,12 +17,12 @@ export const PipelineDashboard = () => {
     filterOptions,
     activeFilterCount,
     hasActiveFilters,
-    clearHref,
     filteredDeals,
     metrics,
     totalCount,
     filteredCount,
     updateFilter,
+    clearFiltersHref,
   } = useChart()
 
   return (
@@ -33,10 +33,10 @@ export const PipelineDashboard = () => {
         filterOptions={filterOptions}
         activeFilterCount={activeFilterCount}
         hasActiveFilters={hasActiveFilters}
-        clearHref={clearHref}
         filteredCount={filteredCount}
         totalCount={totalCount}
         onFilterChange={updateFilter}
+        clearFiltersHref={clearFiltersHref}
       />
       <SectionCards metrics={metrics} />
       <div className="flex w-full flex-col gap-4 px-4 md:gap-6 lg:px-6">

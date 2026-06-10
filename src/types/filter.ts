@@ -38,18 +38,18 @@ type PipelineFiltersProps = {
   filterOptions: PipelineFilterOptions
   activeFilterCount: number
   hasActiveFilters: boolean
-  clearHref: string
   filteredCount: number
   totalCount: number
   onFilterChange: <K extends keyof FilterOptions>(
     key: K,
     value: FilterOptions[K] | "all"
   ) => void
+  clearFiltersHref: string
 }
 
 type FilterResetProps = {
   hasActiveFilters: boolean
-  clearHref: string
+  clearFiltersHref: string
   onClear?: () => void
 }
 
@@ -62,14 +62,9 @@ type DealSortOption =
   | "date_desc"
   | "date_asc"
 
-type SearchParamsLike = {
-  get(name: string): string | null
-}
-
 export type {
   FilterResetProps,
   FilterOptions,
-  SearchParamsLike,
   DateRange,
   PipelineFilterOptions,
   PipelineFiltersProps,
